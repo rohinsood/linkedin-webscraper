@@ -9,6 +9,7 @@ options = Options()
 # options.add_argument("headless=false")
 options.add_argument("window-size=1080, 720")
 driver = webdriver.Chrome(chrome_options=options, executable_path=ChromeDriverManager().install())
+searchURL = ""
 nameLi = []
 linkLi = []
 locationli = []
