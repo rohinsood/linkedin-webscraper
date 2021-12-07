@@ -32,20 +32,26 @@ def search (searchString):
         searchURL = searchURL + keywords[i] + "%20"
     driver.get(searchURL)
 
+
+"""
+@function get the # of results from search
+"""
+def resultCount():
+    resultNumStr = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[1]').text
+    resultNum = int(resultNumStr.split()[0])
+    return resultNum
+
 """
 @function gets name and profile link from the search page
+@param resultNum # of profiles
 """
-def profile():
-    # gets # of results from the search
-    profileCountStr = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[1]').text
-    profileCount = int(profileCountStr.split()[0])
-    
+def profile(resultNum):
     # x is used to iterate over the profiles as there are only 10 profiles in 1 search page and i is the total amount of results which can be over 10
     x = 0
     # y is used to iterate over the different pages
     y = 1
 
-    for i in range(profileCount):
+    for i in range(resultNum):
         # scrolls to div of profile
         profileDiv = '//*[@id="main"]/div/div/div[2]/ul/li['+str(x+1)+']'
         scrollTo(profileDiv)
@@ -64,9 +70,16 @@ def profile():
             newPageURL = driver.current_url+"&page="+str(y)
             driver.get(newPageURL)
             x=0
-        
-def information():
-    pass
+    print(linkLi)
+    print(nameLi)
+
+"""
+@function scrapes info from each profile
+@param resultNum # of profiles
+"""
+def information(resultNum):
+    for i in range(resultNum):
+        pass
     
 # RUN CODE HERE
 driver.get("https://www.linkedin.com/login?fromSignIn=true")
@@ -79,6 +92,11 @@ print("----LOGGED IN-----")
 search("Anika Sood")
 print("----SEARCHED-----")
 
-profile()
+profileCount = resultCount()
+print("PROFILE COUNT: " + str(profileCount))
+profile(profileCount)
+print("PROFILE COUNT UPDATED: " + str(profileCount))
+
+
 print("----GOT PROFILE & NAME LISTS-----")
 

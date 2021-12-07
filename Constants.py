@@ -10,6 +10,7 @@ options = Options()
 options.add_argument("window-size=1080, 720")
 driver = webdriver.Chrome(chrome_options=options, executable_path=ChromeDriverManager().install())
 searchURL = ""
+profileCount = 0
 nameLi = []
 linkLi = []
 locationli = []
