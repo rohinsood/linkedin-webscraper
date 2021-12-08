@@ -38,11 +38,11 @@ def search (searchString):
 
 """
 @function get the # of results from search, used as a constant for later functions
+@param resultNumber = profileCount constant
 """
-def resultCount():
+def resultCount(resultNumber):
     resultNumStr = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[1]').text
-    resultNum = int(resultNumStr.split()[0])
-    return resultNum
+    resultNumber = int(resultNumStr.split()[0])
 
 """
 @function gets name and profile link from the search page
@@ -80,6 +80,10 @@ def profile(nameList, linkList, resultNum):
 
 """
 @function scrapes info from each profile
+@param locList = list for locations
+@param posList = list for current position
+@param expList = 2D list for experience, contains title, compan, duraiton, and URL in each nested array
+@param eduList = 2D list for education, contains instiution, degree, duration, and URL
 @param resultNum = # of profiles
 """
 def information(locList, posList, expList, eduList, resultNum):
@@ -94,15 +98,15 @@ def information(locList, posList, expList, eduList, resultNum):
         position = driver.find_element_by_xpath('//*[@id="main"]/div/section/div[2]/div[2]/div/div[2]')
         posList.append(position.text)
 
-        expElementList = driver.find_elements_by_xpath('//*[@id="experience-section"]/ul/li')
-
-        print("LENGHT OF EXP: " + str(len(expElementList)))
+        # get # of exp members
+        expElementList = len(driver.find_elements_by_xpath('//*[@id="experience-section"]/ul/li'))
 
         # experience iteration
         for z in range(len(expElementList)):
             expXPath = '//*[@id="experience-section"]/ul/li['+str(z+1)+']/section/div/div'
             scrollTo(expXPath)
 
+            # try and accept statements are for if the elements are not found; will add a message in place of the info
             try:
                 expTitle = driver.find_element_by_xpath(expXPath + '/a/div[2]/h3').text
             except NoSuchElementException:
@@ -123,14 +127,16 @@ def information(locList, posList, expList, eduList, resultNum):
 
             expList.append([expTitle, expCompany, expDuration, expURL])
 
-
-        eduElementList = driver.find_elements_by_xpath('//*[@id="education-section"]/ul/li')
-        print("EDU LEN: " + str(len(eduElementList)))
-
-        for t in range(len(eduElementList)):
+        # get # of edu members
+        eduElementList = len(driver.find_elements_by_xpath('//*[@id="education-section"]/ul/li'))
+        print("EDU LEN: " + str(eduElementList))
+        
+        # education iteration
+        for t in range(eduElementList):
             eduXPath = '//*[@id="education-section"]/ul/li['+str(t+1)+']/div/div'
             scrollTo(eduXPath)
-
+    
+            # try and accept statements are for if the elements are not found; will add a message in place of the info      
             try:
                 eduInstitution = driver.find_element_by_xpath(eduXPath + '/a/div[2]/div/h3').text
             except NoSuchElementException:
@@ -155,6 +161,8 @@ def information(locList, posList, expList, eduList, resultNum):
     
 # RUN CODE HERE
 driver.get("https://www.linkedin.com/login?fromSignIn=true")
+
+# used for 2fa and incorrect passwords
 while True:
     try:
         logIn('rs.rohinsood@gmail.com', '1861253d')
@@ -172,8 +180,7 @@ search("Anika Sood")
 print("----SEARCHED-----")
 
 print("PROFILE COUNT: " + str(profileCount))
-profileCount = resultCount()
-print("PROFILE COUNT UPDATED: " + str(profileCount))
+resultCount(profileCount)
 
 profile(names, links, profileCount)
 print("----GOT PROFILE & NAME LISTS-----")
