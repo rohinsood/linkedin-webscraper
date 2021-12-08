@@ -9,14 +9,17 @@ options = Options()
 # options.add_argument("headless=false")
 options.add_argument("window-size=1080, 720")
 driver = webdriver.Chrome(chrome_options=options, executable_path=ChromeDriverManager().install())
+
 searchURL = ""
 profileCount = 0
-nameLi = []
-linkLi = []
-locationli = []
-positionLi = []
-expLi = []
-eduLi = []
+noInfo = "No Info Found for: "
+
+names = []
+links = []
+locations = []
+currentPos = []
+experience = []
+education = []
 
 def isPresent(xpath):
     try: 
