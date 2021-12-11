@@ -21,13 +21,6 @@ currentPos = []
 experience = []
 education = []
 
-def isPresent(xpath):
-    try: 
-        driver.find_element_by_xpath(xpath)
-        return True;
-    except NoSuchElementException:
-        return False;
-
 def scrollTo(xpath):
     element = driver.find_element_by_xpath(xpath)
 
