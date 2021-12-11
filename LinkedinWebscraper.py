@@ -1,4 +1,3 @@
-from sys import float_repr_style
 from Constants import *
 
 """
@@ -28,11 +27,7 @@ def twoFactor (verif):
 @param searchString -> user-inputted search string
 """
 def search (searchString):
-    # Divide input string into words and append to list, then add each index of list to URL
-    keywords = searchString.split()
-    searchURL = "https://www.linkedin.com/search/results/people/?keywords="
-    for i in range(len(keywords)):
-        searchURL = searchURL + keywords[i] + "%20"
+    searchURL = "https://www.linkedin.com/search/results/people/?keywords=" + searchString.replace(" ", "%20")
     driver.get(searchURL)
 
 
@@ -40,9 +35,10 @@ def search (searchString):
 @function get the # of results from search, used as a constant for later functions
 @param resultNumber = profileCount constant
 """
-def resultCount(resultNumber):
+def resultCount():
     resultNumStr = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[1]').text
     resultNumber = int(resultNumStr.split()[0])
+    return resultNumber
 
 """
 @function gets name and profile link from the search page
@@ -102,35 +98,37 @@ def information(locList, posList, expList, eduList, resultNum):
         expElementList = len(driver.find_elements_by_xpath('//*[@id="experience-section"]/ul/li'))
 
         # experience iteration
-        for z in range(len(expElementList)):
-            expXPath = '//*[@id="experience-section"]/ul/li['+str(z+1)+']/section/div/div'
+        for z in range(expElementList):
+            expXPath = '//*[@id="experience-section"]/ul/li['+str(z+1)+']/section/div'
             scrollTo(expXPath)
 
             # try and accept statements are for if the elements are not found; will add a message in place of the info
             try:
-                expTitle = driver.find_element_by_xpath(expXPath + '/a/div[2]/h3').text
+                expTitle = driver.find_element_by_xpath(expXPath + '/div/a/div[2]/h3').text
             except NoSuchElementException:
                 expTitle = noInfo + "Title of Experience"
 
             try:
-                expCompany = driver.find_element_by_xpath(expXPath + '/a/div[2]/p[2]').text
+                expCompany = driver.find_element_by_xpath(expXPath + '/div/a/div[2]/p[2]').text
             except NoSuchElementException:
                 expCompany = noInfo + "Company of Experience"
 
             try:
-                expDuration = driver.find_element_by_xpath(expXPath + '/a/div[2]/div/h4[2]/span[2]').text
+                expDuration = driver.find_element_by_xpath(expXPath + '/div/a/div[2]/div/h4[2]/span[2]').text
             except NoSuchElementException:
                 expDuration = noInfo + "Duration of Experience"
 
-            expURLElement = driver.find_element_by_xpath(expXPath + "/a")
-            expURL = "https://www.linkedin.com" + expURLElement.get_attribute("href")
+            try:
+                expURLElement = driver.find_element_by_xpath(expXPath + "/div/a")
+                expURL = "https://www.linkedin.com" + expURLElement.get_attribute("href")
+            except NoSuchElementException:
+                expURL = noInfo + "URL for Experience"
 
             expList.append([expTitle, expCompany, expDuration, expURL])
 
         # get # of edu members
         eduElementList = len(driver.find_elements_by_xpath('//*[@id="education-section"]/ul/li'))
-        print("EDU LEN: " + str(eduElementList))
-        
+                
         # education iteration
         for t in range(eduElementList):
             eduXPath = '//*[@id="education-section"]/ul/li['+str(t+1)+']/div/div'
@@ -153,8 +151,11 @@ def information(locList, posList, expList, eduList, resultNum):
             except NoSuchElementException:
                 eduDuration = noInfo + "Duration of Education"
 
-            eduURLElement = driver.find_element_by_xpath(eduXPath + "/a")
-            eduURL = "https://www.linkedin.com" + eduURLElement.get_attribute("href")
+            try:
+                eduURLElement = driver.find_element_by_xpath(eduXPath + "/a")
+                eduURL = "https://www.linkedin.com" + eduURLElement.get_attribute("href")
+            except NoSuchElementException:
+                eduURL = noInfo + "URL for Education"
 
             eduList.append([eduInstitution, eduDegree, eduDuration, eduURL])
             
@@ -176,11 +177,10 @@ while True:
 
 print("----LOGGED IN-----")
 
-search("Anika Sood")
+search("Rohin Sood")
 print("----SEARCHED-----")
 
-print("PROFILE COUNT: " + str(profileCount))
-resultCount(profileCount)
+profileCount = resultCount()
 
 profile(names, links, profileCount)
 print("----GOT PROFILE & NAME LISTS-----")
