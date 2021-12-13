@@ -1,4 +1,5 @@
 from Constants import *
+import Constants
 
 """
 @function to log in :)
@@ -23,12 +24,13 @@ def twoFactor (verif):
     driver.find_element_by_xpath('//*[@id="global-nav"]')
 
 """
-@function implements user-defined search string into url
+@function implements user-defined search string into url, adds URL and search string into constants
 @param searchString -> user-inputted search string
 """
-def search (searchString):
-    searchURL = "https://www.linkedin.com/search/results/people/?keywords=" + searchString.replace(" ", "%20")
-    driver.get(searchURL)
+def search (searchStringParam):
+    searchLink = Constants.searchURL + searchStringParam.replace(" ", "%20")
+    driver.get(searchLink)
+    return searchStringParam, searchLink
 
 
 """
@@ -36,8 +38,11 @@ def search (searchString):
 @param resultNumber = profileCount constant
 """
 def resultCount():
-    resultNumStr = driver.find_element_by_xpath('//*[@id="main"]/div/div/div[1]').text
-    resultNumber = int(resultNumStr.split()[0])
+    resultNumStr = (driver.find_element_by_xpath('//*[@id="main"]/div/div/div[1]').text).split()
+    if resultNumStr[0] == 'About':
+        resultNumber = int(resultNumStr[1].replace(",", ""))
+    else:
+        resultNumber = int(resultNumStr[0])
     return resultNumber
 
 """
@@ -76,13 +81,14 @@ def profile(nameList, linkList, resultNum):
 
 """
 @function scrapes info from each profile
+@param currCoList = list for current company
 @param locList = list for locations
 @param posList = list for current position
 @param expList = 2D list for experience, contains title, compan, duraiton, and URL in each nested array
 @param eduList = 2D list for education, contains instiution, degree, duration, and URL
 @param resultNum = # of profiles
 """
-def information(locList, posList, expList, eduList, resultNum):
+def information(currCoList, locList, posList, expList, eduList, resultNum):
 
     # profile iteration
     for i in range(resultNum):
@@ -95,12 +101,27 @@ def information(locList, posList, expList, eduList, resultNum):
         posList.append(position.text)
 
         # get # of exp members
-        expElementList = len(driver.find_elements_by_xpath('//*[@id="experience-section"]/ul/li'))
+        expElementNum = len(driver.find_elements_by_xpath('//*[@id="experience-section"]/ul/li'))
+        expList.append([])
+
+        # adds msg if there is no exp element
+        if expElementNum == 0:
+            expList[i].append("No Info found for Experience")
 
         # experience iteration
-        for z in range(expElementList):
+        for z in range(expElementNum):
             expXPath = '//*[@id="experience-section"]/ul/li['+str(z+1)+']/section/div'
             scrollTo(expXPath)
+
+            # add the title of the first experience member
+            if z == 0:
+                try:
+                    currentCo = driver.find_element_by_xpath(expXPath + '/div/a/div[2]/p[2]').text
+                except NoSuchElementException:
+                    currentCo = noInfo + "Current Company"
+                currCoList.append(currentCo)
+            else:
+                pass
 
             # try and accept statements are for if the elements are not found; will add a message in place of the info
             try:
@@ -124,13 +145,19 @@ def information(locList, posList, expList, eduList, resultNum):
             except NoSuchElementException:
                 expURL = noInfo + "URL for Experience"
 
-            expList.append([expTitle, expCompany, expDuration, expURL])
+            expList[i].append([expTitle, expCompany, expDuration, expURL])
+        
 
         # get # of edu members
-        eduElementList = len(driver.find_elements_by_xpath('//*[@id="education-section"]/ul/li'))
+        eduElementNum = len(driver.find_elements_by_xpath('//*[@id="education-section"]/ul/li'))
+        eduList.append([])
+        
+        # adds msg if there is no edu element
+        if(eduElementNum == 0):
+            eduList[i].append(noInfo + 'Education')
                 
         # education iteration
-        for t in range(eduElementList):
+        for t in range(eduElementNum):
             eduXPath = '//*[@id="education-section"]/ul/li['+str(t+1)+']/div/div'
             scrollTo(eduXPath)
     
@@ -147,6 +174,8 @@ def information(locList, posList, expList, eduList, resultNum):
 
             try:
                 eduTitleNum = len(driver.find_elements_by_xpath(eduXPath + "/a/div[2]/div/p"))
+                eduTitleNum += 1
+
                 eduDuration = driver.find_element_by_xpath(eduXPath + '/a/div[2]/div/p['+str(eduTitleNum)+']/span[2]').text
             except NoSuchElementException:
                 eduDuration = noInfo + "Duration of Education"
@@ -157,4 +186,6 @@ def information(locList, posList, expList, eduList, resultNum):
             except NoSuchElementException:
                 eduURL = noInfo + "URL for Education"
 
-            eduList.append([eduInstitution, eduDegree, eduDuration, eduURL])
+                # GRADUATION YEAR AD ------------
+
+            eduList[i].append([eduInstitution, eduDegree, eduDuration, eduURL])

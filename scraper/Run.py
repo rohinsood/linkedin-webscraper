@@ -16,7 +16,7 @@ while True:
 
 print("----LOGGED IN-----")
 
-search("Rohin Sood")
+searchString, searchURL = search(searchStringParam="Rohin Sood")
 print("----SEARCHED-----")
 
 profileCount = resultCount()
@@ -24,8 +24,16 @@ profileCount = resultCount()
 profile(names, links, profileCount)
 print("----GOT PROFILE & NAME LISTS-----")
 
-information(locations, currentPos, experience, education, profileCount)
+information(currentCo, locations, currentPos, experience, education, profileCount)
+print(names)
+print(links)
+print(currentCo)
 print(locations)
 print(currentPos)
 print(experience)
 print(education)
+print(searchString)
+print(searchURL)
+print(profileCount)
+
+driver.close()

@@ -10,7 +10,8 @@ options = Options()
 options.add_argument("window-size=1080, 720")
 driver = webdriver.Chrome(chrome_options=options, executable_path=ChromeDriverManager().install())
 
-searchURL = ""
+searchURL = "https://www.linkedin.com/search/results/people/?keywords="
+searchString = ""
 profileCount = 0
 noInfo = "No Info Found for: "
 
@@ -20,6 +21,7 @@ locations = []
 currentPos = []
 experience = []
 education = []
+currentCo = []
 
 def scrollTo(xpath):
     element = driver.find_element_by_xpath(xpath)
