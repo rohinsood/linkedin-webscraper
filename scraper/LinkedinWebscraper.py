@@ -106,7 +106,7 @@ def information(currCoList, locList, posList, expList, eduList, resultNum):
 
         # adds msg if there is no exp element
         if expElementNum == 0:
-            expList[i].append("No Info found for Experience")
+            expList[i].append([noInfo + "Title of Experience", noInfo + "Company of Experience", noInfo + "Duration of Experience", noInfo + "URL for Experience"])
 
         # experience iteration
         for z in range(expElementNum):
@@ -154,7 +154,7 @@ def information(currCoList, locList, posList, expList, eduList, resultNum):
         
         # adds msg if there is no edu element
         if(eduElementNum == 0):
-            eduList[i].append(noInfo + 'Education')
+            eduList[i].append([noInfo + "Educational Instituion", noInfo + "Education Degree",  noInfo + "Duration of Education", noInfo + "URL for Education"])
                 
         # education iteration
         for t in range(eduElementNum):
