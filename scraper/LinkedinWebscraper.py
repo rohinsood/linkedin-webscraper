@@ -55,6 +55,7 @@ def profile(nameList, linkList, resultNum=profileCount):
     # x is used to iterate over the profiles as there are only 10 profiles in 1 search page and i is the total amount of results which can be over 10
     # so x can be reset every time it enters a new page in order to get to the list element while i continues past 10
     x = 0
+    
     # y is used to iterate over the different pages
     y = 1
 
@@ -82,6 +83,7 @@ def profile(nameList, linkList, resultNum=profileCount):
             newPageURL = driver.current_url+"&page="+str(y)
             driver.get(newPageURL)
             x=0
+    return resultNum
 
 
 """
@@ -91,27 +93,22 @@ def profile(nameList, linkList, resultNum=profileCount):
 @param posList = list for current position
 @param expList = 2D list for experience, contains title, compan, duraiton, and URL in each nested array
 @param eduList = 2D list for education, contains instiution, degree, duration, and URL
-@param resultNum = # of profiles
 """
-def information(currCoList, locList, posList, expList, eduList, resultNum):
+def information(currCoList, locList, posList, expList, eduList):
 
+    i = 0
     # profile iteration
-    for i in range(resultNum):
-
-        print(i)
+    while i < (len(links)):
         try:
             driver.get(links[i])
-            print("WORKD")
         except InvalidArgumentException:
-            print("NOWORDK")
             currCoList.append(noInfo + "Current Company\nAn Internal Error Occurred or Their Profile is Unviewable")
             locList.append(noInfo + "Location\nAn Internal Error Occurred or Their Profile is Unviewable")
             posList.append(noInfo + "Title\nAn Internal Error Occurred or Their Profile is Unviewable")
             expList.append([[noInfo + "Experience\nAn Internal Error Occurred or Their Profile is Unviewable"]])
             eduList.append([[noInfo+"Experience\n\nAn Internal Error Occurred or Their Profile is Unviewable"]])
-            i = i + 1
+            i += 1
             continue
-        print (i)
 
         location = driver.find_element_by_xpath('//*[@id="main"]/div/section/div[2]/div[2]/div[2]/span[1]')
         locList.append(location.text)
@@ -166,7 +163,6 @@ def information(currCoList, locList, posList, expList, eduList, resultNum):
 
             expList[i].append([expTitle, expCompany, expDuration, expURL])
         
-
         # get # of edu members
         eduElementNum = len(driver.find_elements_by_xpath('//*[@id="education-section"]/ul/li'))
         eduList.append([])
@@ -206,3 +202,5 @@ def information(currCoList, locList, posList, expList, eduList, resultNum):
                 eduURL = noInfo + "URL for Education"
 
             eduList[i].append([eduInstitution, eduDegree, eduDuration, eduURL])
+
+        i += 1

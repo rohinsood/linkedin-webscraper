@@ -1,5 +1,5 @@
-from LinkedinWebscraper import *
 from Excel import *
+from Scraper import *
 
 driver.get("https://www.linkedin.com/login?fromSignIn=true")
 
@@ -22,7 +22,8 @@ print("----SEARCHED-----")
 
 profileCount = resultCount()
 
-profile(names, links, 5)
+profileCount = profile(names, links, 5)
+print(links)
 print("----GOT PROFILE & NAME LISTS-----")
 
 information(currentCo, locations, currentPos, experience, education, profileCount)
@@ -40,4 +41,6 @@ print(profileCount)
 driver.close()
 
 print("------Exporting------")
-exporting()
+Excel.exporting(namesLi=names, linksLi=links, currentCoLi=currentCo, locationsLi=locations, currentPosLi=currentPos, experienceLi=experience, educationLi=education, profCount=profileCount, searchLink=searchURL)
+
+print("-----Finished Exoprting-----")
