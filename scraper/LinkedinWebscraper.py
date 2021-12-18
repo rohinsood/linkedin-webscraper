@@ -141,7 +141,7 @@ def information(currCoList, locList, posList, expList, eduList, resultNum):
 
             try:
                 expURLElement = driver.find_element_by_xpath(expXPath + "/div/a")
-                expURL = "https://www.linkedin.com" + expURLElement.get_attribute("href")
+                expURL = expURLElement.get_attribute("href")
             except NoSuchElementException:
                 expURL = noInfo + "URL for Experience"
 
@@ -182,10 +182,8 @@ def information(currCoList, locList, posList, expList, eduList, resultNum):
 
             try:
                 eduURLElement = driver.find_element_by_xpath(eduXPath + "/a")
-                eduURL = "https://www.linkedin.com" + eduURLElement.get_attribute("href")
+                eduURL = eduURLElement.get_attribute("href")
             except NoSuchElementException:
                 eduURL = noInfo + "URL for Education"
-
-                # GRADUATION YEAR AD ------------
 
             eduList[i].append([eduInstitution, eduDegree, eduDuration, eduURL])
