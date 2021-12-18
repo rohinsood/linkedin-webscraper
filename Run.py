@@ -1,4 +1,5 @@
 from LinkedinWebscraper import *
+from Excel import *
 
 driver.get("https://www.linkedin.com/login?fromSignIn=true")
 
@@ -16,12 +17,12 @@ while True:
 
 print("----LOGGED IN-----")
 
-searchString, searchURL = search(searchStringParam="Rohin Sood")
+searchString, searchURL = search(searchStringParam="Computer Science UCR 2018")
 print("----SEARCHED-----")
 
 profileCount = resultCount()
 
-profile(names, links, profileCount)
+profile(names, links, 5)
 print("----GOT PROFILE & NAME LISTS-----")
 
 information(currentCo, locations, currentPos, experience, education, profileCount)
@@ -37,3 +38,6 @@ print(searchURL)
 print(profileCount)
 
 driver.close()
+
+print("------Exporting------")
+exporting()

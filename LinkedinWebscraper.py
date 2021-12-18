@@ -1,5 +1,5 @@
-from Constants import *
-import Constants
+from Scraper.Constants import *
+import Scraper.Constants as Constants
 
 """
 @function to log in :)
@@ -51,7 +51,7 @@ def resultCount():
 @param linkList = links constant
 @param resultNum = # of profiles
 """
-def profile(nameList, linkList, resultNum):
+def profile(nameList, linkList, resultNum=profileCount):
     # x is used to iterate over the profiles as there are only 10 profiles in 1 search page and i is the total amount of results which can be over 10
     # so x can be reset every time it enters a new page in order to get to the list element while i continues past 10
     x = 0
@@ -64,10 +64,15 @@ def profile(nameList, linkList, resultNum):
         scrollTo(profileDiv)
 
         # scrpares info & adds to list
-        name = driver.find_element_by_xpath(profileDiv+'/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a/span/span[1]')
-        nameList.append(name.text)
-        profileURL = driver.find_element_by_xpath(profileDiv+'/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a')
-        linkList.append(profileURL.get_attribute("href"))
+        try:
+            name = driver.find_element_by_xpath(profileDiv+'/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a/span/span[1]')
+            nameList.append(name.text)
+            profileURL = driver.find_element_by_xpath(profileDiv+'/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a')
+            linkList.append(profileURL.get_attribute("href"))
+        except NoSuchElementException:
+            nameList.append(noInfo + "Name\nAn Internal Error Occurred or Their Profile is Unviewable")
+            linkList.append(noInfo + "Profile URL\nAn Internal Error Occurred or Their Profile is Unviewable")
+
 
         x += 1
 
@@ -92,7 +97,21 @@ def information(currCoList, locList, posList, expList, eduList, resultNum):
 
     # profile iteration
     for i in range(resultNum):
-        driver.get(links[i])
+
+        print(i)
+        try:
+            driver.get(links[i])
+            print("WORKD")
+        except InvalidArgumentException:
+            print("NOWORDK")
+            currCoList.append(noInfo + "Current Company\nAn Internal Error Occurred or Their Profile is Unviewable")
+            locList.append(noInfo + "Location\nAn Internal Error Occurred or Their Profile is Unviewable")
+            posList.append(noInfo + "Title\nAn Internal Error Occurred or Their Profile is Unviewable")
+            expList.append([[noInfo + "Experience\nAn Internal Error Occurred or Their Profile is Unviewable"]])
+            eduList.append([[noInfo+"Experience\n\nAn Internal Error Occurred or Their Profile is Unviewable"]])
+            i = i + 1
+            continue
+        print (i)
 
         location = driver.find_element_by_xpath('//*[@id="main"]/div/section/div[2]/div[2]/div[2]/span[1]')
         locList.append(location.text)
