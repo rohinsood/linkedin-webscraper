@@ -51,7 +51,7 @@ def resultCount():
 @param linkList = links constant
 @param resultNum = # of profiles
 """
-def profile(nameList, linkList, resultNum=profileCount):
+def profile(nameList, linkList, resultNum=10):
     # x is used to iterate over the profiles as there are only 10 profiles in 1 search page and i is the total amount of results which can be over 10
     # so x can be reset every time it enters a new page in order to get to the list element while i continues past 10
     x = 0

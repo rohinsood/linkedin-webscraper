@@ -17,16 +17,16 @@ while True:
 
 print("----LOGGED IN-----")
 
-searchString, searchURL = search(searchStringParam="Computer Science UCR 2018")
+searchString, searchURL = search(searchStringParam="Anika Sood")
 print("----SEARCHED-----")
 
 profileCount = resultCount()
 
-profileCount = profile(names, links, 5)
+profileCount = profile(names, links, 20)
 print(links)
 print("----GOT PROFILE & NAME LISTS-----")
-
-information(currentCo, locations, currentPos, experience, education, profileCount)
+  
+information(currentCo, locations, currentPos, experience, education)
 print(names)
 print(links)
 print(currentCo)
