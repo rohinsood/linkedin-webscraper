@@ -6,8 +6,13 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import *
 from selenium.common.exceptions import InvalidArgumentException
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.remote.remote_connection import LOGGER
+import logging
+from pyshorteners import *
+from pyshorteners.exceptions import ShorteningErrorException
 
 
+LOGGER.setLevel(logging.WARNING)
 s = Service(ChromeDriverManager().install())
 options = Options()
 # options.add_argument("--headless")  
@@ -26,6 +31,9 @@ currentPos = []
 experience = []
 education = []
 currentCo = []
+tempLinkStr = ""
+shortener = Shortener()
+
 
 def scrollTo(xpath):
     element = driver.find_element_by_xpath(xpath)

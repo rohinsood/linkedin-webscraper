@@ -69,7 +69,11 @@ def profile(nameList, linkList, resultNum=10):
             name = driver.find_element_by_xpath(profileDiv+'/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a/span/span[1]')
             nameList.append(name.text)
             profileURL = driver.find_element_by_xpath(profileDiv+'/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a')
-            linkList.append(profileURL.get_attribute("href"))
+            try:
+                tempLinkStr = shortener.tinyurl.short(profileURL.get_attribute("href"))
+            except ShorteningErrorException:
+                tempLinkStr = profileURL.get_attribute("href")
+            linkList.append(tempLinkStr)
         except NoSuchElementException:
             nameList.append(noInfo + "Name\nAn Internal Error Occurred or Their Profile is Unviewable")
             linkList.append(noInfo + "Profile URL\nAn Internal Error Occurred or Their Profile is Unviewable")
