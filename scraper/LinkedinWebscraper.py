@@ -3,7 +3,8 @@ import Scraper.Constants as Constants
 
 """
 @function to log in :)
-@param verif -> user inputed verif code
+@param uname -> usernamae
+@param pwd -> passowrd
 """
 def logIn (uname, pwd):
     username = driver.find_element_by_id("username")
@@ -18,7 +19,10 @@ def logIn (uname, pwd):
 @param verif -> user inputed verif code
 """
 def twoFactor (verif):
-    verifkey = driver.find_element_by_xpath('//*[@id="input__email_verification_pin"]')
+    try:
+        verifkey = driver.find_element_by_xpath('//*[@id="input__phone_verification_pin"]')
+    except NoSuchElementException:
+        verifkey = driver.find_element_by_xpath('//*[@id="input__email_verification_pin"]')
     verifkey.send_keys(verif);
     verifkey.send_keys(Keys.RETURN)
     driver.find_element_by_xpath('//*[@id="global-nav"]')
@@ -49,7 +53,7 @@ def resultCount():
 @function gets name and profile link from the search page
 @param nameList = names constant
 @param linkList = links constant
-@param resultNum = # of profiles
+@param resultNum = # of profiles, default is 10
 """
 def profile(nameList, linkList, resultNum=10):
     # x is used to iterate over the profiles as there are only 10 profiles in 1 search page and i is the total amount of results which can be over 10
@@ -61,7 +65,13 @@ def profile(nameList, linkList, resultNum=10):
 
     for i in range(resultNum):
         # scrolls to div of profile
-        profileDiv = '//*[@id="main"]/div/div/div[2]/ul/li['+str(x+1)+']'
+        try:
+            profileDiv = '//*[@id="main"]/div/div/div[3]/ul/li['+str(x+1)+']'
+            print("333333333333333333333333333333333333")
+        except NoSuchElementException:
+            print("222222222222222222222222222222222222")
+            profileDiv = '//*[@id="main"]/div/div/div[2]/ul/li['+str(x+1)+']'
+
         scrollTo(profileDiv)
 
         # scrpares info & adds to list
